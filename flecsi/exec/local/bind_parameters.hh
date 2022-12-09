@@ -1,8 +1,8 @@
 // Copyright (c) 2016, Triad National Security, LLC
 // All rights reserved.
 
-#ifndef FLECSI_EXEC_LOCAL_BIND_PROLOGUE_HH
-#define FLECSI_EXEC_LOCAL_BIND_PROLOGUE_HH
+#ifndef FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
+#define FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
 
 #include <hpx/modules/collectives.hpp>
 
@@ -93,4 +93,4 @@ protected:
 } // namespace exec
 } // namespace flecsi
 
-#endif // FLECSI_EXEC_LOCAL_BIND_PROLOGUE_HH
+#endif // FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
