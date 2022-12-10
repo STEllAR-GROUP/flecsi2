@@ -4,8 +4,6 @@
 #ifndef FLECSI_EXEC_BIND_PARAMETERS_HH
 #define FLECSI_EXEC_BIND_PARAMETERS_HH
 
-#include <hpx/modules/collectives.hpp>
-
 #include "flecsi/config.hh"
 #include "flecsi/data/privilege.hh"
 #include "flecsi/flog.hh"
