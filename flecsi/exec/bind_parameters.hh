@@ -18,7 +18,6 @@
 
 namespace flecsi {
 inline flog::devel_tag bind_parameters_tag("bind_parameters");
-inline flog::devel_tag bind_accessors_tag("bind_accessors");
 } // namespace flecsi
 
 // bind_accessors is implemented per backend:
@@ -87,7 +86,7 @@ protected:
   static typename std::enable_if_t<!std::is_base_of_v<data::bind_tag, D>> visit(
     D &) {
     {
-      flog::devel_guard guard(bind_parameters);
+      flog::devel_guard guard(bind_parameters_tag);
       flog_devel(info) << "No setup for parameter of type " << util::type<D>()
                        << std::endl;
     }
