@@ -1,8 +1,8 @@
 // Copyright (c) 2016, Triad National Security, LLC
 // All rights reserved.
 
-#ifndef FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
-#define FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
+#ifndef FLECSI_EXEC_BIND_PARAMETERS_HH
+#define FLECSI_EXEC_BIND_PARAMETERS_HH
 
 #include <flecsi-config.h>
 
@@ -21,7 +21,7 @@ inline flog::devel_tag bind_parameters_tag("bind_parameters");
 inline flog::devel_tag bind_accessors_tag("bind_accessors");
 } // namespace flecsi
 
-// task_prologue is implemented per backend:
+// bind_accessors is implemented per backend:
 #if FLECSI_BACKEND == FLECSI_BACKEND_legion
 #include "flecsi/exec/leg/bind_accessors.hh"
 #elif FLECSI_BACKEND == FLECSI_BACKEND_mpi
@@ -98,4 +98,4 @@ protected:
 } // namespace flecsi
 /// \endcond
 
-#endif // FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
+#endif // FLECSI_EXEC_BIND_PARAMETERS_HH

@@ -6,9 +6,9 @@
 
 #include <flecsi-config.h>
 
+#include "flecsi/exec/bind_parameters.hh"
 #include "flecsi/exec/buffers.hh"
 #include "flecsi/exec/leg/future.hh"
-#include "flecsi/exec/local/bind_parameters.hh"
 #include "flecsi/exec/task_attributes.hh"
 #include "flecsi/run/backend.hh"
 #include "flecsi/util/annotation.hh"

@@ -27,7 +27,7 @@ if(FLECSI_BACKEND STREQUAL "legion")
     leg/task_prologue.hh
     leg/reduction_wrapper.hh
     leg/tracer.hh
-    local/bind_parameters.hh
+    bind_parameters.hh
   )
 
 elseif(FLECSI_BACKEND STREQUAL "mpi")
@@ -50,7 +50,7 @@ elseif(FLECSI_BACKEND STREQUAL "hpx")
     hpx/policy.hh
     hpx/reduction_wrapper.hh
     hpx/task_prologue.hh
-    local/bind_parameters.hh
+    bind_parameters.hh
     tracer.hh
   )
 endif()

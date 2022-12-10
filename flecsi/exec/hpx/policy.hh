@@ -15,11 +15,11 @@
 
 #include <hpx/modules/collectives.hpp>
 
+#include "flecsi/exec/bind_parameters.hh"
 #include "flecsi/exec/buffers.hh"
 #include "flecsi/exec/hpx/future.hh"
 #include "flecsi/exec/hpx/reduction_wrapper.hh"
 #include "flecsi/exec/launch.hh"
-#include "flecsi/exec/local/bind_parameters.hh"
 #include "flecsi/exec/prolog.hh"
 #include "flecsi/exec/tracer.hh"
 #include "flecsi/flog.hh"
