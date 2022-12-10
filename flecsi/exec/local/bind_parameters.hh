@@ -29,17 +29,19 @@ inline flog::devel_tag bind_accessors_tag("bind_accessors");
 #include "flecsi/exec/hpx/bind_accessors.hh"
 #endif
 
+/// \cond core
 namespace flecsi {
 namespace exec {
+/// \addtogroup execution
+/// \{
 
 #ifdef DOXYGEN // implemented per-backend
 /// Handling for low-level special task parameters/arguments.
 /// The exact member function signatures may vary between backends.
+/// \note No constructors are specified.
 template<task_processor_type_t Proc>
 struct bind_accessors {
 protected:
-  /// \note No constructors are specified.
-
   /// Send a raw field reference to a raw accessor.
   template<typename T, Privileges P>
   void visit(data::accessor<data::raw, T, P> &);
@@ -90,7 +92,9 @@ protected:
     }
   }
 };
+/// \}
 } // namespace exec
 } // namespace flecsi
+/// \endcond
 
 #endif // FLECSI_EXEC_LOCAL_BIND_PARAMETERS_HH
