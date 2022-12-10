@@ -6,8 +6,6 @@
 
 #include <flecsi-config.h>
 
-#include <hpx/modules/collectives.hpp>
-
 #include "flecsi/data/privilege.hh"
 #include "flecsi/flog.hh"
 #include "flecsi/util/annotation.hh"
