@@ -22,9 +22,11 @@ namespace flecsi {
 namespace data {
 
 /// \defgroup hpx-data HPX Data
-/// Type of the dependency represented by a future
+/// HPX-specific data management.
 /// \ingroup data
 /// \{
+
+/// Type of the dependency represented by a future
 enum class dependency : std::uint8_t {
   /// This field has no future associated with it (yet)
   none = 0,
@@ -35,7 +37,6 @@ enum class dependency : std::uint8_t {
 };
 /// \}
 
-// Direct data storage.
 struct backend_storage : local::detail::storage {
 
   ~backend_storage() {
