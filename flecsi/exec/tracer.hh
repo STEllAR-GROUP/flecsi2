@@ -6,6 +6,7 @@
 
 namespace flecsi::exec {
 
+// Default implementation that does nothing.
 struct trace {
 
   struct guard;

@@ -8,7 +8,6 @@
 
 namespace flecsi {
 namespace data {
-// Direct data storage.
 struct backend_storage : local::detail::storage {
   constexpr void synchronize() const noexcept {
     // this is a noop for the MPI backend
