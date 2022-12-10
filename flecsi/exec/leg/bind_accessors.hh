@@ -18,7 +18,7 @@
 namespace flecsi {
 /// \addtogroup legion-execution
 /// \{
-namespace exec::leg {
+namespace exec {
 
 /*!
   The bind_accessors type is called to walk the user task arguments inside of
@@ -38,7 +38,7 @@ struct bind_accessors {
     : legion_runtime_(legion_runtime), legion_context_(legion_context),
       regions_(regions), futures_(futures) {}
 
-private:
+protected:
   // All accessors are handled in terms of their underlying raw accessors.
 
   template<typename D, Privileges P>
@@ -68,6 +68,7 @@ private:
     bind(reg, reduce, ac);
   }
 
+private:
   template<typename A, typename LA>
   void bind(const Legion::PhysicalRegion & reg, A & acc, const LA & aa) const {
     const auto dom = legion_runtime_->get_index_space_domain(
@@ -80,6 +81,7 @@ private:
         r.hi[1] - r.lo[1] + 1));
   }
 
+protected:
   /*--------------------------------------------------------------------------*
    Futures
    *--------------------------------------------------------------------------*/
@@ -88,6 +90,7 @@ private:
     f = {futures_[future_id++]};
   }
 
+private:
   Legion::Runtime * legion_runtime_;
   Legion::Context & legion_context_;
   size_t region = 0;
@@ -98,7 +101,7 @@ private:
 }; // struct bind_accessors
 
 /// \}
-} // namespace exec::leg
+} // namespace exec
 } // namespace flecsi
 
 #endif
