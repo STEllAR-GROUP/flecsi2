@@ -5,6 +5,7 @@
 stages:
   - Canary
   - MPI backend
+  - HPX backend
   - Legion backend
   - Standalone
   - Final
@@ -57,6 +58,18 @@ variables:
   VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
   VARIANTS: "caliper_detail=low +graphviz +hdf5 +kokkos ^${LEGION_IBV} build_type=Debug +kokkos ^${KOKKOS_SERIAL}"
 
+.mpich-hpx: &mpich-hpx
+  MPI_PROVIDER: mpich
+  VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+  VARIANTS: +hdf5 +kokkos ^hpx ^kokkos~cuda
+  SPACK_INSTALL_FLECSI_BACKEND: hpx
+
+.mpich-hpx-debug: &mpich-hpx-debug
+  MPI_PROVIDER: mpich
+  VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+  VARIANTS: caliper_detail=low +graphviz +hdf5 +kokkos ^hpx build_type=Debug ^kokkos~cuda
+  SPACK_INSTALL_FLECSI_BACKEND: hpx
+
 .openmpi: &openmpi
   MPI_PROVIDER: openmpi
   VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
@@ -66,6 +79,18 @@ variables:
   MPI_PROVIDER: openmpi
   VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
   VARIANTS: "+hdf5 +kokkos ^${LEGION_IBV} build_type=Debug +kokkos ^${KOKKOS_SERIAL}"
+
+.openmpi-hpx: &openmpi-hpx
+  MPI_PROVIDER: openmpi
+  VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+  VARIANTS: +hdf5 +kokkos ^hpx ^kokkos~cuda
+  SPACK_INSTALL_FLECSI_BACKEND: hpx
+
+.openmpi-hpx-debug: &openmpi-hpx-debug
+  MPI_PROVIDER: openmpi
+  VERSION: flecsi@'${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+  VARIANTS: +hdf5 ^hpx build_type=Debug ^kokkos~cuda
+  SPACK_INSTALL_FLECSI_BACKEND: hpx
 
 .openmpi-cuda: &openmpi-cuda
   MPI_PROVIDER: openmpi
@@ -154,6 +179,26 @@ mpich-legion-gnu:
     PARTITIONS: skylake-gold
     ARCHIVE_SPACK_ENV: "yes"
 
+mpich-hpx-gnu:
+  stage: HPX backend
+  extends: .darwin_build_template
+  needs: []
+  dependencies: []
+  only:
+    - merge_requests
+  variables:
+    <<: *mpich-hpx-debug
+    ENVIRONMENT: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+    TOOLCHAIN: "gcc@${GCC_VERSION}"
+    BUILD_TYPE: Debug
+    BACKEND: hpx
+    CXX_COMPILER: g++
+    C_COMPILER: gcc
+    CMAKE_OPTIONS: -DENABLE_HDF5=ON -DENABLE_KOKKOS=ON -DENABLE_GRAPHVIZ=ON -DCALIPER_DETAIL=low
+    PARTITIONS: skylake-gold
+    SCHEDULER_PARAMETERS: "-N 1 --qos=debug -p ${PARTITIONS}"
+    ARCHIVE_SPACK_ENV: "yes"
+
 mpich-legion-gnu:release:
   stage: Legion backend
   extends: .darwin_build_template
@@ -169,6 +214,25 @@ mpich-legion-gnu:release:
     TOOLCHAIN: "gcc@${GCC_VERSION}"
     BUILD_TYPE: Release
     BACKEND: legion
+    CXX_COMPILER: g++
+    C_COMPILER: gcc
+    CMAKE_OPTIONS: -DENABLE_HDF5=ON -DENABLE_KOKKOS=ON
+
+mpich-hpx-gnu:release:
+  stage: HPX backend
+  extends: .darwin_build_template
+  needs: []
+  dependencies: []
+  rules:
+    - if: '$CI_MERGE_REQUEST_LABELS =~ /release_builds/'
+      when: always
+    - when: never
+  variables:
+    <<: *mpich-hpx
+    ENVIRONMENT: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+    TOOLCHAIN: "gcc@${GCC_VERSION}"
+    BUILD_TYPE: Release
+    BACKEND: hpx
     CXX_COMPILER: g++
     C_COMPILER: gcc
     CMAKE_OPTIONS: -DENABLE_HDF5=ON -DENABLE_KOKKOS=ON
@@ -322,6 +386,42 @@ openmpi-legion-gnu:release:
     C_COMPILER: gcc
     CMAKE_OPTIONS: -DENABLE_HDF5=ON
 
+openmpi-hpx-gnu:
+  stage: HPX backend
+  extends: .darwin_build_template
+  needs: []
+  dependencies: []
+  only:
+    - merge_requests
+  variables:
+    <<: *openmpi-hpx-debug
+    ENVIRONMENT: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+    TOOLCHAIN: "gcc@${GCC_VERSION}"
+    BUILD_TYPE: Debug
+    BACKEND: hpx
+    CXX_COMPILER: g++
+    C_COMPILER: gcc
+    CMAKE_OPTIONS: -DENABLE_HDF5=ON
+
+openmpi-hpx-gnu:release:
+  stage: HPX backend
+  extends: .darwin_build_template
+  needs: []
+  dependencies: []
+  rules:
+    - if: '$CI_MERGE_REQUEST_LABELS =~ /release_builds/'
+      when: always
+    - when: never
+  variables:
+    <<: *openmpi
+    ENVIRONMENT: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+    TOOLCHAIN: "gcc@${GCC_VERSION}"
+    BUILD_TYPE: Release
+    BACKEND: hpx
+    CXX_COMPILER: g++
+    C_COMPILER: gcc
+    CMAKE_OPTIONS: -DENABLE_HDF5=ON
+
 #------------------------------------------------------------------------------#
 # Build and unit tests for Legion backend with OpenMPI provider,
 # and Clang + CUDA compiler toolchain.
@@ -430,6 +530,25 @@ mpich-legion-clang:
     TOOLCHAIN: "clang@${CLANG_VERSION}"
     BUILD_TYPE: Debug
     BACKEND: legion
+    CXX_COMPILER: clang++
+    CXX_FLAGS: "-fcolor-diagnostics ${WARN}"
+    C_COMPILER: clang
+    C_FLAGS: ${CXX_FLAGS}
+    CMAKE_OPTIONS: -DENABLE_HDF5=ON -DENABLE_KOKKOS=ON
+
+mpich-hpx-clang:
+  stage: HPX backend
+  extends: .darwin_build_template
+  needs: []
+  dependencies: []
+  only:
+    - merge_requests
+  variables:
+    <<: *mpich-hpx-debug
+    ENVIRONMENT: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}'
+    TOOLCHAIN: "clang@${CLANG_VERSION}"
+    BUILD_TYPE: Debug
+    BACKEND: hpx
     CXX_COMPILER: clang++
     CXX_FLAGS: "-fcolor-diagnostics ${WARN}"
     C_COMPILER: clang
