@@ -8,3 +8,5 @@ class Flecsi(Flecsi):
 
     depends_on("legion@cr-16:cr-99", when="backend=legion")
     depends_on("kokkos@3.7:", when="+kokkos")
+
+    conflicts('^hpx networking=tcp', when='backend=hpx')
