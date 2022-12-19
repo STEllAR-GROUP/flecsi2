@@ -159,7 +159,7 @@ mpich-hpx-gnu:
   only:
     - merge_requests
   variables:
-    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +hdf5 +kokkos ^${KOKKOS_SERIAL} ^mpich"
+    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +kokkos ^${KOKKOS_SERIAL} ^mpich"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
 
 mpich-legion-gnu:release:
@@ -185,7 +185,7 @@ mpich-hpx-gnu:release:
       when: always
     - when: never
   variables:
-    VARIANTS: "backend=hpx +flog +hdf5 +kokkos ^${KOKKOS_SERIAL} ^mpich"
+    VARIANTS: "backend=hpx +flog +kokkos ^${KOKKOS_SERIAL} ^mpich"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
 
 #------------------------------------------------------------------------------#
@@ -313,7 +313,7 @@ openmpi-hpx-gnu:release:
       when: always
     - when: never
   variables:
-    VARIANTS: "backend=hpx +flog +hdf5 ^openmpi"
+    VARIANTS: "backend=hpx +flog ^openmpi"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
 
 #------------------------------------------------------------------------------#
@@ -405,7 +405,7 @@ mpich-hpx-clang:
   only:
     - merge_requests
   variables:
-    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +hdf5 ^mpich"
+    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz ^mpich"
     TOOLCHAIN: "clang@${CLANG_VERSION}"
 
 #------------------------------------------------------------------------------#
