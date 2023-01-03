@@ -161,6 +161,7 @@ mpich-hpx-gnu:
   variables:
     VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +kokkos ^${KOKKOS_SERIAL} ^mpich"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
+    SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
 mpich-legion-gnu:release:
   stage: Legion backend
@@ -187,6 +188,8 @@ mpich-hpx-gnu:release:
   variables:
     VARIANTS: "backend=hpx +flog +kokkos ^${KOKKOS_SERIAL} ^mpich"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
+    PARTITIONS: skylake-gold
+    SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
 #------------------------------------------------------------------------------#
 # Build and unit tests for MPI backend with MPICH provider,
@@ -302,6 +305,8 @@ openmpi-hpx-gnu:
   variables:
     <<: *openmpi-hpx-debug
     TOOLCHAIN: "gcc@${GCC_VERSION}"
+    PARTITIONS: skylake-gold
+    SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
 openmpi-hpx-gnu:release:
   stage: HPX backend
@@ -315,6 +320,8 @@ openmpi-hpx-gnu:release:
   variables:
     VARIANTS: "backend=hpx +flog ^openmpi"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
+    PARTITIONS: skylake-gold
+    SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
 #------------------------------------------------------------------------------#
 # Build and unit tests for Legion backend with OpenMPI provider,
@@ -407,6 +414,8 @@ mpich-hpx-clang:
   variables:
     VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz ^mpich"
     TOOLCHAIN: "clang@${CLANG_VERSION}"
+    PARTITIONS: skylake-gold
+    SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
 #------------------------------------------------------------------------------#
 # Build and unit tests for MPI backend with MPICH provider,
