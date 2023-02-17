@@ -2,7 +2,6 @@
 #include "package_b.hh"
 #include "package_c.hh"
 
-#include "flecsi/runtime.hh"
 #include "flecsi/util/unit.hh"
 
 int

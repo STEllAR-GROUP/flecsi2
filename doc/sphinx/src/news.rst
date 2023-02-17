@@ -12,8 +12,8 @@ Release Notes
    and Fixed.
 
    Each such section discusses some subsequence of Build, Runtime, Data,
-   Execution, Topologies, Legion backend, MPI backend, On-node parallelism,
-   Utilities, and Logging.
+   Execution, Topologies, Legion backend, MPI backend, HPX backend, On-node
+   parallelism, Utilities, and Logging.
 
 Changes in v2.3.0
 +++++++++++++++++
@@ -83,6 +83,10 @@ New features
 * Legion backend
 
   * Task names are now shortened for better usability in Legion profiling tools. See :doc:`user-guide/profiling` for details.
+
+* HPX backend
+
+  * FleCSI now supports HPX as a runtime backend.
 
 * Utilities
 

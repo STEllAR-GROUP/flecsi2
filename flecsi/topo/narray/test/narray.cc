@@ -1072,7 +1072,8 @@ narray_driver() {
       execute<print_field<1>>(m1, f1(m1));
       EXPECT_EQ(test<check_mesh_field<1>>(m1, f1(m1)), 0);
 
-      if(FLECSI_BACKEND != FLECSI_BACKEND_mpi) {
+      if(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
+         FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
         auto lm = data::launch::make(m1, data::launch::gather(m1.colors(), 1));
         EXPECT_EQ(test<check_contiguous>(lm), 0);
       }
@@ -1262,7 +1263,8 @@ narray_driver() {
         false);
     } // scope
 
-    if(FLECSI_BACKEND != FLECSI_BACKEND_mpi) {
+    if(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
+       FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
       // 4D Mesh
       mesh4d::slot m4;
 

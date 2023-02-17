@@ -29,11 +29,27 @@ elseif(FLECSI_BACKEND STREQUAL "mpi")
   set(run_HEADERS
     ${run_HEADERS}
     mpi/context.hh
+    local/context.hh
   )
 
   set(run_SOURCES
     ${run_SOURCES}
     mpi/context.cc
+    local/context.cc
+  )
+
+elseif(FLECSI_BACKEND STREQUAL "hpx")
+
+  set(run_HEADERS
+    ${run_HEADERS}
+    hpx/context.hh
+    local/context.hh
+  )
+
+  set(run_SOURCES
+    ${run_SOURCES}
+    hpx/context.cc
+    local/context.cc
   )
 
 endif()
@@ -71,6 +87,9 @@ if(ENABLE_UNIT_TESTS)
   set_source_files_properties(test/cycle.cc
     PROPERTIES COMPILE_FLAGS -Wno-deprecated-declarations)
   target_link_libraries(cycle FleCSI)
+  if(MSVC)
+    target_compile_definitions(cycle PRIVATE NOMINMAX)
+  endif()
   add_dependencies(${FLECSI_UNIT_TESTS_TARGET} cycle)
   flecsi_add_target_test(cycle)
 endif()

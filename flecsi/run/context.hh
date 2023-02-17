@@ -18,6 +18,7 @@
 #include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
+#include <chrono>
 #include <cstddef>
 #include <cstdlib> // getenv
 #include <functional>
@@ -25,6 +26,7 @@
 #include <optional>
 #include <set>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -180,7 +182,7 @@ protected:
     if(const auto p = std::getenv("FLECSI_SLEEP")) {
       const auto n = std::atoi(p);
       std::cerr << getpid() << ": sleeping for " << n << " seconds...\n";
-      sleep(n);
+      std::this_thread::sleep_for(std::chrono::seconds(n));
     }
 
 #if defined(FLECSI_ENABLE_FLOG)
