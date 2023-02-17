@@ -24,6 +24,8 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 project(FleCSI LANGUAGES CXX C)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -201,12 +203,16 @@ if(ENABLE_LIBRARY)
   if(FLECSI_BACKEND STREQUAL "mpi")
     set(ENABLE_MPI ON CACHE BOOL "Enable MPI" FORCE)
     set(ENABLE_LEGION OFF CACHE BOOL "Enable Legion" FORCE)
+    set(ENABLE_HPX OFF CACHE BOOL "Enable HPX" FORCE)
   elseif(FLECSI_BACKEND STREQUAL "legion")
     set(ENABLE_MPI ON CACHE BOOL "Enable MPI" FORCE)
     set(ENABLE_LEGION ON CACHE BOOL "Enable Legion" FORCE)
+    set(ENABLE_HPX OFF CACHE BOOL "Enable HPX" FORCE)
   elseif(FLECSI_BACKEND STREQUAL "hpx")
     set(ENABLE_MPI ON CACHE BOOL "Enable MPI" FORCE)
     set(ENABLE_HPX ON CACHE BOOL "Enable HPX" FORCE)
+    set(ENABLE_BOOST ON CACHE BOOL "Enable Boost" FORCE)
+    set(ENABLE_LEGION OFF CACHE BOOL "Enable Legion" FORCE)
   endif()
 
   mark_as_advanced(ENABLE_MPI ENABLE_LEGION ENABLE_HPX)
@@ -292,6 +298,11 @@ if(ENABLE_LIBRARY)
   # Dynamic libraries.
   #----------------------------------------------------------------------------#
   target_link_libraries(FleCSI PUBLIC ${CMAKE_DL_LIBS})
+
+  if(MSVC)
+    # Avoid ABI incompatibilities for Debug builds
+    target_compile_options(FleCSI PUBLIC $<$<CONFIG:Debug>:/MDd /RTC1>)
+  endif()
 
   #----------------------------------------------------------------------------#
   # FLOG

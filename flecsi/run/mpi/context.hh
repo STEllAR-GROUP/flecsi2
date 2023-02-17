@@ -10,8 +10,7 @@
 #error FLECSI_ENABLE_MPI not defined! This file depends on MPI!
 #endif
 
-#include "flecsi/run/context.hh"
-#include "flecsi/util/mpi.hh"
+#include "flecsi/run/local/context.hh"
 
 #include <boost/program_options.hpp>
 #include <mpi.h>
@@ -25,32 +24,21 @@ namespace run {
 /// \ingroup runtime
 /// \{
 
-struct dependencies_guard {
-  dependencies_guard(arguments::dependent &);
-  ~dependencies_guard();
-
-private:
-  dependencies_guard(arguments::dependent &, int, char **);
-
-  util::mpi::init mpi;
-};
-
-struct context_t : context {
+struct context_t : local::context {
 
   //--------------------------------------------------------------------------//
   //  Runtime.
   //--------------------------------------------------------------------------//
-
-  context_t(const arguments::config &);
+  using context::context;
 
   /*!
-    Documnetation for this interface is in the top-level context type.
+    Documentation for this interface is in the top-level context type.
    */
 
   int start(const std::function<int()> &);
 
   /*
-    Documnetation for this interface is in the top-level context type.
+    Documentation for this interface is in the top-level context type.
    */
 
   static int task_depth() {
@@ -58,7 +46,7 @@ struct context_t : context {
   } // task_depth
 
   /*
-    Documnetation for this interface is in the top-level context type.
+    Documentation for this interface is in the top-level context type.
    */
 
   Color color() const {
@@ -66,7 +54,7 @@ struct context_t : context {
   }
 
   /*
-    Documnetation for this interface is in the top-level context type.
+    Documentation for this interface is in the top-level context type.
    */
 
   Color colors() const {

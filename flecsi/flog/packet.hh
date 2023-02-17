@@ -12,11 +12,22 @@
 #include <mpi.h>
 #endif
 
-#if defined(_MSC_VER)
-#error "Need implementation for Windows"
-#endif
+#if defined(_WIN32)
+#include <sys/timeb.h>
+#include <winsock2.h>
 
+inline int
+gettimeofday(struct timeval * t, void * timezone) {
+  struct _timeb timebuffer;
+  _ftime(&timebuffer);
+  t->tv_sec = timebuffer.time;
+  t->tv_usec = 1000 * timebuffer.millitm;
+  return 0;
+}
+typedef long long suseconds_t;
+#else
 #include <sys/time.h>
+#endif
 
 #include <algorithm>
 #include <array>
