@@ -22,8 +22,6 @@
 #include <unordered_set>
 #include <vector>
 
-#include <unistd.h>
-
 namespace flecsi {
 namespace log = flog;
 }
