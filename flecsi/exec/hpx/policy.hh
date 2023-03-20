@@ -27,8 +27,10 @@
 
 #include <cstddef>
 #include <string>
+#include <tuple>
 #include <type_traits>
 #include <utility> // forward
+#include <variant> // monostate, etc.
 
 namespace flecsi {
 namespace exec {
@@ -128,7 +130,7 @@ reduce_internal(Args &&... args) {
   // prolog<> instances below.
 
   // For an explanation of the different kinds of task invocation with
-  // flecsi::execute() see flexci/exec/mpi/policy.hh.
+  // flecsi::execute() see flecsi/exec/mpi/policy.hh.
   const auto ds = exec::launch_size<Attributes, decltype(params)>(args...);
   util::annotation::rguard<util::annotation::execute_task_user> ann{task_name};
 
@@ -150,6 +152,7 @@ reduce_internal(Args &&... args) {
       // running (reduction operations).
       bind_parameters<processor_type> provide_storage(
         params, regions_partitions);
+
       return f(std::forward<decltype(params)>(params));
     };
     return std::move(bound_params)
