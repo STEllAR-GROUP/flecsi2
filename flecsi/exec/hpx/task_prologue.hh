@@ -236,6 +236,9 @@ public:
                               task = std::forward<Task>(task),
                               params = std::forward<Params>(params),
                               task_name = std::move(task_name)]() mutable {
+          // manage task_local variables for this task
+          run::task_local_base::guard tlg;
+
           // annotate new HPX thread
           ::hpx::scoped_annotation _(task_name);
 
@@ -255,6 +258,9 @@ public:
           task = std::forward<Task>(task),
           params = std::forward<Params>(params),
           task_name = std::move(task_name)](auto && deps) mutable {
+          // manage task_local variables for this task
+          run::task_local_base::guard tlg;
+
           // annotate new HPX thread
           ::hpx::scoped_annotation _(task_name);
 

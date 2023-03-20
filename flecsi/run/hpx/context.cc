@@ -53,7 +53,8 @@ context_t::start(std::function<int()> const & action, bool) {
       context::threads_ = context::processes_;
 
       // guard destroyed after action call
-      const int ret = (flecsi::detail::data_guard(), action());
+      const int ret =
+        (flecsi::detail::data_guard(), run::task_local_base::guard(), action());
 
       // free communicators (must happen before hpx::finalize as the
       // cleanup operations require for the runtime system to be up and
@@ -130,5 +131,29 @@ context_t::termination_detection() {
     },
     "termination_detection");
 }
-
 } // namespace flecsi::run
+
+namespace flecsi::detail {
+
+void
+create_storage() {
+  auto const id = ::hpx::threads::get_self_id();
+  flog_assert(::hpx::threads::get_thread_data(id) == 0,
+    "thread local storage should not exist yet");
+  ::hpx::threads::set_thread_data(
+    id, reinterpret_cast<std::size_t>(new task_local_data));
+}
+
+task_local_data *
+storage() noexcept {
+  return reinterpret_cast<task_local_data *>(
+    ::hpx::threads::get_thread_data(::hpx::threads::get_self_id()));
+}
+
+void
+reset_storage() noexcept {
+  auto const * stg = storage();
+  ::hpx::threads::set_thread_data(::hpx::threads::get_self_id(), 0);
+  delete stg;
+}
+} // namespace flecsi::detail
