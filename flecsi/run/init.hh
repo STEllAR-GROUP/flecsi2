@@ -45,7 +45,7 @@ initialize(int argc, char ** argv, bool dependent = true) {
   const auto c = args.act.status();
   if(c) {
     if(!ctx.process())
-      std::cerr << args.act.stderr;
+      std::cerr << args.act.cerr;
     finalize();
   }
   return c;

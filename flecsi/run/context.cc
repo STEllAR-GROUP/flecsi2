@@ -45,7 +45,7 @@ arguments::arguments(int argc, char ** argv) : cfg() {
 #ifdef FLECSI_ENABLE_KOKKOS
   dep.kokkos.push_back(act.program);
 #endif
-  act.op = getopt(argc, argv); // also populates act.stderr
+  act.op = getopt(argc, argv); // also populates act.cerr
 }
 
 arguments::action::operation
@@ -118,15 +118,15 @@ arguments::getopt(int argc, char ** argv) {
       out = std::move(*this).str();
     }
     std::string & out;
-  } stderr(act.stderr);
+  } cerr(act.cerr);
   auto usage = [&] {
-    stderr << "Usage: " << act.program << " ";
+    cerr << "Usage: " << act.program << " ";
 
     size_t positional_count = pd.max_total_count();
     size_t max_label_chars = std::numeric_limits<size_t>::min();
 
     for(size_t i{0}; i < positional_count; ++i) {
-      stderr << "<" << pd.name_for_position(i) << "> ";
+      cerr << "<" << pd.name_for_position(i) << "> ";
 
       const size_t size = pd.name_for_position(i).size();
       max_label_chars = size > max_label_chars ? size : max_label_chars;
@@ -134,54 +134,53 @@ arguments::getopt(int argc, char ** argv) {
 
     max_label_chars += 2;
 
-    stderr << "\n\n";
+    cerr << "\n\n";
 
     if(positional_count) {
-      stderr << "Positional Options:" << std::endl;
+      cerr << "Positional Options:" << std::endl;
 
       for(size_t i{0}; i < pd.max_total_count(); ++i) {
         auto const & name = pd.name_for_position(i);
         auto help = context::positional_help().at(name);
-        stderr << "  " << name << " ";
-        stderr << std::string(max_label_chars - name.size() - 2, ' ');
+        cerr << "  " << name << " ";
+        cerr << std::string(max_label_chars - name.size() - 2, ' ');
 
         if(help.size() > 78 - max_label_chars) {
           std::string first = help.substr(
             0, help.substr(0, 78 - max_label_chars).find_last_of(' '));
-          stderr << first << std::endl;
+          cerr << first << std::endl;
           help = help.substr(first.size() + 1, help.size() - first.size() + 1);
 
           while(help.size() > 78 - max_label_chars) {
             std::string part = help.substr(
               0, help.substr(0, 78 - max_label_chars).find_last_of(' '));
-            stderr << std::string(max_label_chars + 1, ' ') << part
-                   << std::endl;
+            cerr << std::string(max_label_chars + 1, ' ') << part << std::endl;
             help = help.substr(part.size() + 1, help.size() - part.size());
           } // while
 
-          stderr << std::string(max_label_chars + 1, ' ') << help << std::endl;
+          cerr << std::string(max_label_chars + 1, ' ') << help << std::endl;
         }
         else {
-          stderr << help << std::endl;
+          cerr << help << std::endl;
         } // if
 
       } // for
 
-      stderr << std::endl;
+      cerr << std::endl;
     } // if
 
-    stderr << master << std::endl;
-    stderr << flecsi_desc << std::endl;
+    cerr << master << std::endl;
+    cerr << flecsi_desc << std::endl;
 
 #if defined(FLECSI_ENABLE_FLOG)
     auto const & tm = flog::state::tag_map();
 
     if(tm.size()) {
-      stderr << "Available FLOG Tags (FleCSI Logging Utility):" << std::endl;
+      cerr << "Available FLOG Tags (FleCSI Logging Utility):" << std::endl;
     } // if
 
     for(auto t : tm) {
-      stderr << "  " << t.first << std::endl;
+      cerr << "  " << t.first << std::endl;
     } // for
 #endif
   };
@@ -224,12 +223,12 @@ arguments::getopt(int argc, char ** argv) {
         std::stringstream ss;
         if(!check(boost_any.value(), ss)) {
           std::string dash = positional ? "" : "--";
-          stderr << FLOG_COLOR_LTRED << "ERROR: " << FLOG_COLOR_RED
-                 << "invalid argument for '" << dash << name << "' option!!!"
-                 << std::endl
-                 << FLOG_COLOR_LTRED << (ss.rdbuf()->in_avail() ? " => " : "")
-                 << ss.rdbuf() << FLOG_COLOR_PLAIN << std::endl
-                 << std::endl;
+          cerr << FLOG_COLOR_LTRED << "ERROR: " << FLOG_COLOR_RED
+               << "invalid argument for '" << dash << name << "' option!!!"
+               << std::endl
+               << FLOG_COLOR_LTRED << (ss.rdbuf()->in_avail() ? " => " : "")
+               << ss.rdbuf() << FLOG_COLOR_PLAIN << std::endl
+               << std::endl;
 
           usage();
           return act.error;
@@ -245,9 +244,9 @@ arguments::getopt(int argc, char ** argv) {
       error.replace(pos, 2, "");
     } // if
 
-    stderr << FLOG_COLOR_LTRED << "ERROR: " << FLOG_COLOR_RED << error << "!!!"
-           << FLOG_COLOR_PLAIN << std::endl
-           << std::endl;
+    cerr << FLOG_COLOR_LTRED << "ERROR: " << FLOG_COLOR_RED << error << "!!!"
+         << FLOG_COLOR_PLAIN << std::endl
+         << std::endl;
     usage();
     return act.error;
   } // try

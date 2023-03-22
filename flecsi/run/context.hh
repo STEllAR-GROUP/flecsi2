@@ -84,7 +84,7 @@ struct arguments {
     /// Operation selected, populated from \c \--control-model or
     /// \c \--control-model-sorted options.
     op;
-    std::string stderr; ///< Error text from initialization.
+    std::string cerr; ///< Error text from initialization.
 
     run::status status() const {
       switch(op) {
@@ -228,10 +228,10 @@ public:
 #if defined(FLECSI_ENABLE_FLOG) && defined(FLOG_ENABLE_MPI)
     const Color p = flog::state::instance().source_process();
     if(p != flog::state::all_processes && p >= processes_) {
-      std::ostringstream stderr;
-      stderr << a.program << ": flog process " << p << " does not exist with "
-             << processes_ << " processes\n";
-      a.stderr += std::move(stderr).str();
+      std::ostringstream cerr;
+      cerr << a.program << ": flog process " << p << " does not exist with "
+           << processes_ << " processes\n";
+      a.cerr += std::move(cerr).str();
       a.op = a.error;
     }
 #else
