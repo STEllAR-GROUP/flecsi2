@@ -223,7 +223,7 @@ protected:
     : process_(proc), processes_(np) {
     if(const auto p = std::getenv("FLECSI_SLEEP")) {
       const auto n = std::atoi(p);
-      std::cerr << getpid() << ": sleeping for " << n << " seconds...\n";
+      // std::cerr << getpid() << ": sleeping for " << n << " seconds...\n";
       std::this_thread::sleep_for(std::chrono::seconds(n));
     }
 
