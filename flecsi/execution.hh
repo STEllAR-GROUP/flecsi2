@@ -57,7 +57,7 @@ struct runtime {
     auto & ctx = run::context::instance();
     ctx.check_config(a);
     if(!ctx.process())
-      std::cerr << a.stderr;
+      std::cerr << a.cerr;
     switch(a.op) {
 #ifdef FLECSI_ENABLE_GRAPHVIZ
       case A::control_model:
