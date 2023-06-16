@@ -18,11 +18,8 @@
 
 namespace flecsi::run {
 
-context_t::context_t(const arguments::config & c, arguments::action & a)
-  : context(c, a), argv{a.program} {
-  argv.reserve(c.backend.size() + 1);
-  argv.insert(argv.end(), c.backend.begin(), c.backend.end());
-}
+context_t::context_t(const arguments::config & c)
+  : context(c), argv{c.backend} {}
 
 //----------------------------------------------------------------------------//
 // Implementation of context_t::start.

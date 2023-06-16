@@ -25,7 +25,7 @@ struct context_t : local::context {
   //--------------------------------------------------------------------------//
   //  Runtime.
   //--------------------------------------------------------------------------//
-  context_t(const arguments::config &, arguments::action &);
+  context_t(const arguments::config &);
 
   int start(const std::function<int()> &);
 
