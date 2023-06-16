@@ -20,12 +20,16 @@ namespace flecsi::run {
 /// \ingroup runtime
 /// \{
 
+struct config : config_base {
+  std::vector<std::string> hpx;
+};
+
 struct context_t : local::context {
 
   //--------------------------------------------------------------------------//
   //  Runtime.
   //--------------------------------------------------------------------------//
-  context_t(const arguments::config &, arguments::action &);
+  context_t(const config &);
 
   int start(const std::function<int()> &, bool);
 
@@ -72,7 +76,7 @@ private:
   auto
   get_communicator_data(Map & map, std::string name, CreateComm && create_comm);
 
-  arguments::argv argv;
+  std::vector<std::string> cfg;
   ::hpx::spinlock mtx;
   std::map<std::string, channel_communicator_data> p2p_comms_;
   std::map<std::string, communicator_data> world_comms_;

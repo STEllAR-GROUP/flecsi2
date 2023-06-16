@@ -21,12 +21,10 @@ private:
 #endif
 };
 
-struct config : config_base {};
-
 namespace local {
 
 struct context : run::context {
-  context(const config &);
+  context(const config_base &);
 };
 
 } // namespace local

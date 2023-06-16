@@ -18,11 +18,7 @@
 
 namespace flecsi::run {
 
-context_t::context_t(const arguments::config & c, arguments::action & a)
-  : context(c, a), argv{a.program} {
-  argv.reserve(c.backend.size() + 1);
-  argv.insert(argv.end(), c.backend.begin(), c.backend.end());
-}
+context_t::context_t(const config & c) : context(c), cfg(c.hpx) {}
 
 //----------------------------------------------------------------------------//
 // Implementation of context_t::start.
@@ -42,7 +38,12 @@ context_t::start(std::function<int()> const & action, bool) {
     "hpx.commandline.allow_unknown!=1",
     // disable HPX' short options
     "hpx.commandline.aliasing!=0"};
+  params.cfg.insert(params.cfg.end(),
+    std::move_iterator(cfg.begin()),
+    std::move_iterator(cfg.end()));
+  cfg.clear();
 
+  char * argv{};
   return ::hpx::init(
     [=](int, char *[]) -> int {
       context::start();
@@ -66,8 +67,8 @@ context_t::start(std::function<int()> const & action, bool) {
       ::hpx::finalize();
       return ret;
     },
-    argv.size(),
-    arguments::pointers(argv).data(),
+    0,
+    &argv,
     params);
 }
 

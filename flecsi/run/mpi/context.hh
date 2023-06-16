@@ -18,6 +18,8 @@ namespace run {
 /// \ingroup runtime
 /// \{
 
+struct config : config_base {};
+
 struct context_t : local::context {
 
   //--------------------------------------------------------------------------//

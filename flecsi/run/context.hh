@@ -109,6 +109,9 @@ struct config_base {
 struct config : config_base {
   /// Command line for Legion, if using it.
   argv legion;
+  /// [Configuration](https://hpx-docs.stellar-group.org/branches/master/html/manual/launching_and_configuring_hpx_applications.html)
+  /// assignments for HPX, if using it.
+  std::vector<std::string> hpx;
 };
 
 /// RAII guard for initializing/finalizing FleCSI dependencies.
