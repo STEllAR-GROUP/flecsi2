@@ -42,6 +42,9 @@ context_t::start(std::function<int()> const & action) {
 
   return ::hpx::init(
     [=](int, char *[]) -> int {
+      // manage task_local variables for this task
+      run::task_local_base::guard tlg;
+
       context::start();
 
       context::process_ = ::hpx::get_locality_id();
@@ -50,8 +53,7 @@ context_t::start(std::function<int()> const & action) {
       context::threads_ = context::processes_;
 
       // guard destroyed after action call
-      const int ret =
-        (flecsi::detail::data_guard(), run::task_local_base::guard(), action());
+      const int ret = (flecsi::detail::data_guard(), action());
 
       // free communicators (must happen before hpx::finalize as the
       // cleanup operations require for the runtime system to be up and

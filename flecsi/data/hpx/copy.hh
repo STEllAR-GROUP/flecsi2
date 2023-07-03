@@ -102,6 +102,9 @@ struct copy_engine : local::copy_engine {
 
     init_delayed_ghost_copy(field,
       [this, data_fid, comm_tag = std::move(comm_tag), comm_gen, p2p_gen]() {
+        // manage task_local variables for this task
+        run::task_local_base::guard tlg;
+
         // annotate new HPX thread
         ::hpx::scoped_annotation _(comm_tag);
 
@@ -146,6 +149,9 @@ struct copy_engine : local::copy_engine {
           ops.push_back(
             get<data_type>(comm, that_site_arg(src_rank), tag_arg(generation))
               .then([&, src_rank](auto && f) {
+                // manage task_local variables for this task
+                run::task_local_base::guard tlg;
+
                 auto && data = f.get();
                 std::size_t i = 0;
                 for(auto ghost_idx : ghost_entities.find(src_rank)->second) {
