@@ -970,7 +970,7 @@ check_4dmesh(mesh4d::accessor<ro> m) {
     std::set<util::id> boundary_low[2] = {{0}, {}};
     std::set<util::id> boundary_high[2] = {{}, {3}};
 
-    const int nparts = 2; //#num colors on each axis
+    const int nparts = 2; // #num colors on each axis
 
     const auto idx = [&] {
       auto rem = color();
@@ -1093,8 +1093,8 @@ narray_driver() {
       execute<print_field<1>>(m1, f1(m1));
       EXPECT_EQ(test<check_mesh_field<1>>(m1, f1(m1)), 0);
 
-      if(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
-         FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
+      if constexpr(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
+                   FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
         auto lm = data::launch::make(m1, data::launch::gather(m1.colors(), 1));
         EXPECT_EQ(test<check_contiguous>(lm), 0);
       }
@@ -1203,8 +1203,8 @@ narray_driver() {
       execute<init_verify_rf<3, mesh3d::domain::all, true>>(m3, rf3(m3), sz);
     } // scope
 
-    if(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
-       FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
+    if constexpr(FLECSI_BACKEND != FLECSI_BACKEND_mpi &&
+                 FLECSI_BACKEND != FLECSI_BACKEND_hpx) {
       // 4D Mesh
       mesh4d::gcoord indices{4, 4, 4, 4};
       mesh4d::index_definition idef;
