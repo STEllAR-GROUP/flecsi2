@@ -283,6 +283,10 @@ function(flecsi_add_test name)
 
   _flecsi_get_unit_test_backend_flags(UNIT_FLAGS)
 
+  if (FleCSI_ENABLE_HPX)
+    list(APPEND  UNIT_FLAGS "--backend-args=--hpx:ignore-batch-env --hpx:threads=2")
+  endif()
+
   if(${proc_instances} GREATER 1)
     foreach(instance ${unit_PROCS})
       add_test(
