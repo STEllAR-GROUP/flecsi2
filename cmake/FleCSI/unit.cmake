@@ -279,6 +279,10 @@ function(flecsi_add_test name)
     list(APPEND  UNIT_FLAGS "--backend-args=-ll:ocpu 1 -ll:onuma 0")
   endif()
 
+  if (FleCSI_ENABLE_HPX)
+    list(APPEND  UNIT_FLAGS "--backend-args=--hpx:ignore-batch-env --hpx:threads=2")
+  endif()
+
   if(${proc_instances} GREATER 1)
     foreach(instance ${unit_PROCS})
       add_test(
