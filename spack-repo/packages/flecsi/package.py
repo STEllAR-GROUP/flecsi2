@@ -109,7 +109,7 @@ class Flecsi(CMakePackage, CudaPackage, ROCmPackage):
 
     # HPX
 
-    depends_on('hpx@1.8.1: cxxstd=17 malloc=system max_cpu_count=128 '
+    depends_on('hpx@1.9.1: cxxstd=17 malloc=system max_cpu_count=128 '
         'networking=mpi', when='backend=hpx')
     conflicts('^hpx networking=tcp', when='backend=hpx')
 
