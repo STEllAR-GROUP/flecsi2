@@ -67,7 +67,7 @@ variables:
   VARIANTS: "backend=mpi build_type=Debug +flog +hdf5 ^openmpi"
 
 .openmpi-hpx-debug: &openmpi-hpx-debug
-  VARIANTS: "backend=hpx build_type=Debug +flog +hdf5 ^openmpi"
+  VARIANTS: "backend=hpx build_type=Debug +flog +hdf5 ^openmpi ^hpx build_type=Debug"
 
 include: .gitlab/templates.yml
 
@@ -158,7 +158,7 @@ mpich-hpx-gnu:
   only:
     - merge_requests
   variables:
-    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +kokkos ^${KOKKOS_SERIAL} ^mpich"
+    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz +kokkos ^${KOKKOS_SERIAL} ^mpich ^hpx build_type=Debug"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
     SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
 
@@ -185,7 +185,7 @@ mpich-hpx-gnu:release:
       when: always
     - when: never
   variables:
-    VARIANTS: "backend=hpx +flog +kokkos ^${KOKKOS_SERIAL} ^mpich"
+    VARIANTS: "backend=hpx +flog +kokkos ^${KOKKOS_SERIAL} ^mpich ^hpx build_type=Debug"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
     PARTITIONS: skylake-gold
     SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
@@ -317,7 +317,7 @@ openmpi-hpx-gnu:release:
       when: always
     - when: never
   variables:
-    VARIANTS: "backend=hpx +flog ^openmpi"
+    VARIANTS: "backend=hpx +flog ^openmpi ^hpx build_type=Debug"
     TOOLCHAIN: "gcc@${GCC_VERSION}"
     PARTITIONS: skylake-gold
     SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
@@ -410,7 +410,7 @@ mpich-hpx-clang:
   only:
     - merge_requests
   variables:
-    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz ^mpich"
+    VARIANTS: "backend=hpx build_type=Debug caliper_detail=low +flog +graphviz ^mpich ^hpx build_type=Debug"
     TOOLCHAIN: "clang@${CLANG_VERSION}"
     PARTITIONS: skylake-gold
     SCHEDULER_PARAMETERS: "-N 1 -n 8 -c 4 --qos=debug -p ${PARTITIONS}"
