@@ -286,6 +286,7 @@ public:
 #endif
 
   static state & instance() {
+    std::lock_guard<std::mutex> guard(im);
     return instance_.value();
   }
 
@@ -296,6 +297,8 @@ public:
   static void set_instance(const config & c) {
     instance_.emplace(c);
   }
+
+  static inline std::mutex im;
 
 private:
   int verb;
