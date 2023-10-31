@@ -2,7 +2,7 @@
 // All rights reserved.
 
 #include <hpx/hpx_init.hpp>
-#include <hpx/local/mutex.hpp> // unlock_guard
+#include <hpx/mutex.hpp> // unlock_guard
 #include <hpx/modules/execution_base.hpp> // yield_while
 #include <hpx/modules/runtime_local.hpp> // get_thread_manager
 
