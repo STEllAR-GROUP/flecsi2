@@ -12,6 +12,10 @@
 #if defined(FLECSI_ENABLE_KOKKOS)
 #include <Kokkos_Core.hpp>
 #define FLECSI_LAMBDA KOKKOS_LAMBDA
+#elif defined(FLECSI_ENABLE_HPX)
+#include <hpx/algorithm.hpp>
+#include <hpx/execution.hpp>
+#define FLECSI_LAMBDA [=] FLECSI_TARGET
 #else
 #define FLECSI_LAMBDA [=] FLECSI_TARGET
 #endif
@@ -41,29 +45,24 @@ struct wrap {
   using value_type = T;
   using result_view_type = Kokkos::View<value_type, Kokkos::HostSpace>;
 
-  FLECSI_INLINE_TARGET
-  void join(T & a, const T & b) const {
+  FLECSI_INLINE_TARGET void join(T & a, const T & b) const {
     a = R::combine(a, b);
   }
 
-  FLECSI_INLINE_TARGET
-  void join(volatile T & a, const volatile T & b) const {
+  FLECSI_INLINE_TARGET void join(volatile T & a, const volatile T & b) const {
     a = R::combine(a, b);
   }
 
-  FLECSI_INLINE_TARGET
-  void init(T & v) const {
+  FLECSI_INLINE_TARGET void init(T & v) const {
     v = detail::identity_traits<R>::template value<T>;
   }
 
   // Also useful to read the value!
-  FLECSI_INLINE_TARGET
-  T & reference() const {
+  FLECSI_INLINE_TARGET T & reference() const {
     return t;
   }
 
-  FLECSI_INLINE_TARGET
-  result_view_type view() const {
+  FLECSI_INLINE_TARGET result_view_type view() const {
     return &t;
   }
 
@@ -119,7 +118,8 @@ public:
 } // namespace kok
 #endif
 
-struct policy_tag {};
+struct policy_tag {
+};
 
 #if defined(FLECSI_ENABLE_KOKKOS)
 template<class... PP>
@@ -268,6 +268,20 @@ parallel_for(Policy && p, Lambda && lambda, const std::string & name = "") {
         f = std::forward<Lambda>(lambda)] FLECSI_TARGET(int i) {
         f(it.begin()[i]);
       });
+#elif defined(FLECSI_ENABLE_HPX)
+    if(name.empty()) {
+      hpx::experimental::for_loop(
+        hpx::execution::par, 0, policy_type.size(), [&lambda, &p](auto i) {
+          lambda(p.range.begin()[i]);
+        });
+    }
+    else {
+      hpx::experimental::for_loop(hpx::execution::experimental::with_annotation(
+                                    hpx::execution::par, name),
+        0,
+        policy_type.size(),
+        [&lambda, &p](auto i) { lambda(p.range.begin()[i]); });
+    }
 #else
     (void)name;
     for(auto i : policy_type)
@@ -337,6 +351,29 @@ parallel_reduce(Policy && p, Lambda && lambda, const std::string & name = "") {
       },
       result.kokkos());
     return result.reference();
+#elif defined(FLECSI_ENABLE_HPX)
+    T r = detail::identity_traits<R>::template value<T>;
+    auto red =
+      hpx::experimental::reduction(r, r, [](auto const & r, auto & acc) {
+        ref{acc}(r);
+        return acc;
+      });
+    auto f = [&lambda, &p](
+               auto i, T & acc) { lambda(p.range.begin()[i], ref{acc}); };
+
+    if(name.empty()) {
+      hpx::experimental::for_loop(
+        hpx::execution::par, 0, policy_type.size(), red, f);
+    }
+    else {
+      hpx::experimental::for_loop(hpx::execution::experimental::with_annotation(
+                                    hpx::execution::par, name),
+        0,
+        policy_type.size(),
+        red,
+        f);
+    }
+    return r;
 #else
     (void)name;
     T res = detail::identity_traits<R>::template value<T>;
