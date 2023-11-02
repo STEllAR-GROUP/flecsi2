@@ -207,9 +207,6 @@ struct copy_engine : local::copy_engine {
           ops.push_back(
             get<data_type>(comm, that_site_arg(src_rank), tag_arg(generation))
               .then(::hpx::launch::sync, [&, src_rank](auto && f) {
-                // manage task_local variables for this task
-                run::task_local_base::guard tlg;
-
                 auto && data = f.get();
                 std::size_t i = 0;
                 for(auto ghost_idx : ghost_entities.find(src_rank)->second) {
