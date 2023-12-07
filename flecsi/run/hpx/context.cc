@@ -30,14 +30,8 @@ context_t::start(std::function<int()> const & action, bool) {
   ::hpx::init_params params;
   params.cfg = {// allocate at least two cores
     "hpx.force_min_os_threads!=2",
-    // make sure hpx_main is always executed
-    "hpx.run_hpx_main!=1",
-    // force HPX to use multi-threaded MPI
-    "hpx.parcel.mpi.multithreaded!=1",
-    // allow for unknown command line options
-    "hpx.commandline.allow_unknown!=1",
-    // disable HPX' short options
-    "hpx.commandline.aliasing!=0"};
+    // call the below on every process
+    "hpx.run_hpx_main!=1"};
   params.cfg.insert(params.cfg.end(),
     std::move_iterator(cfg.begin()),
     std::move_iterator(cfg.end()));
