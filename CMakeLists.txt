@@ -396,14 +396,6 @@ if(ENABLE_LIBRARY)
     DESTINATION ${CMAKE_INSTALL_PREFIX}/${LIBDIR}/cmake/FleCSI
     RENAME unit-main.cc
   )
-
-  #----------------------------------------------------------------------------#
-  # HPX extra.
-  #----------------------------------------------------------------------------#
-
-  if(FLECSI_BACKEND STREQUAL "hpx")
-    hpx_setup_target(FleCSI NONAMEPREFIX)
-  endif()
 endif()
 
 #------------------------------------------------------------------------------#
