@@ -100,6 +100,8 @@ assign(double_field::accessor<wo> p,
 
 std::size_t
 reset(noisy::accessor<wo>) { // must be an MPI task for correct total
+  std::cerr << "^$~" << static_cast<char>('@' + (process() << 2) + Noisy::count)
+            << "!?&\n";
   return Noisy::count;
 }
 void
