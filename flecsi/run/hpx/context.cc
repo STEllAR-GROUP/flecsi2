@@ -33,15 +33,15 @@ context_t::start(std::function<int()> const & action) {
     "hpx.force_min_os_threads!=2",
     // make sure hpx_main is always executed
     "hpx.run_hpx_main!=1",
-    // force HPX to use multi-threaded MPI
+    // force HPX to use multithreaded MPI
     "hpx.parcel.mpi.multithreaded!=1",
     // allow for unknown command line options
     "hpx.commandline.allow_unknown!=1",
-    // disable HPX' short options
+    // disable HPX' short command line options
     "hpx.commandline.aliasing!=0"};
 
   return ::hpx::init(
-    [=](int, char *[]) -> int {
+    [=, this](int, char *[]) -> int {
       // manage task_local variables for this task
       run::task_local_base::guard tlg;
 
@@ -129,7 +129,7 @@ context_t::termination_detection() {
       // we need to wait until all HPX threads (except the current one plus all
       // background threads) have exited
       return tm.get_thread_count() >
-             std::int64_t(tm.get_background_thread_count() + 1);
+             static_cast<std::int64_t>(tm.get_background_thread_count() + 1);
     },
     "termination_detection");
 }
