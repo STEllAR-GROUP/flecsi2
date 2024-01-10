@@ -257,8 +257,11 @@ index_driver() {
     EXPECT_EQ(test<drows>(vfrac), 0);
     execute<assign>(pressure, verts, vfrac);
     execute<reset>(noise);
-    EXPECT_EQ(
-      (reduce<reset, exec::fold::sum, flecsi::mpi>(noise).get()), processes());
+    const auto ncheck =
+      reduce<reset, exec::fold::sum, flecsi::mpi>(noise).get();
+    std::cerr << "!#!#" << static_cast<char>('@' + (process() << 2) + ncheck)
+              << "__\n";
+    EXPECT_EQ(ncheck, processes());
     execute<use_ptr, flecsi::mpi>(ptr_field(process_topology));
 
     // Rotate the ragged field by one color:
