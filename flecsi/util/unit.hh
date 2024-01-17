@@ -9,6 +9,7 @@
 #include "flecsi/runtime.hh"
 #include "flecsi/util/unit/types.hh"
 
+#include <exception>
 #include <tuple>
 
 namespace flecsi::util::unit {
@@ -39,10 +40,11 @@ operator*(test_control_points cp) {
 
 struct control_policy : flecsi::run::control_base {
 
-  control_policy() : status(0x0) {}
+  control_policy() : status(0x0), exc(std::uncaught_exceptions()) {}
 
   ~control_policy() noexcept(false) {
-    throw exception{status};
+    if(std::uncaught_exceptions() <= exc)
+      throw exception{status};
   }
 
   using control_points_enum = test_control_points;
@@ -53,7 +55,7 @@ struct control_policy : flecsi::run::control_base {
     point<control_points_enum::driver>,
     point<control_points_enum::finalization>>;
 
-  int status;
+  int status, exc;
 }; // struct control_policy
 
 using control = flecsi::run::control<control_policy>;
