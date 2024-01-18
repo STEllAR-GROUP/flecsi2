@@ -10,6 +10,7 @@
 #include "flecsi/util/unit/types.hh"
 
 #include <exception>
+#include <iostream>
 #include <tuple>
 
 namespace flecsi::util::unit {
@@ -43,6 +44,8 @@ struct control_policy : flecsi::run::control_base {
   control_policy() : status(0x0), exc(std::uncaught_exceptions()) {}
 
   ~control_policy() noexcept(false) {
+    std::cerr << "~control_policy: status=" << status
+              << ", delta=" << (std::uncaught_exceptions() - exc) << '\n';
     if(std::uncaught_exceptions() <= exc)
       throw exception{status};
   }
