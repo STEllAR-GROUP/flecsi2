@@ -102,7 +102,7 @@ accelerator_config([[maybe_unused]] run::config & c) {
 #endif
 #elif FLECSI_BACKEND == FLECSI_BACKEND_hpx
   // HPX doesn't recognize these names for some reason, so we have to use a !:
-  c.hpx = {"hpx.ignore_batch_env!=1", "hpx.threads!=2"};
+  c.hpx = {"hpx.ignore_batch_env!=1", "hpx.os_threads!=4"};
 #endif
 }
 
